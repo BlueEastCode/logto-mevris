@@ -28,6 +28,10 @@ export const createPoolFromConfig = async () => {
 
   return createPool(databaseUrl, {
     interceptors: createInterceptorsPreset(),
+    ssl: {
+      ca: process.env.CA_CERT,
+      rejectUnauthorized: true,
+    },
   });
 };
 
@@ -55,6 +59,10 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     const databaseName = dsn.databaseName ?? '?';
     const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }), {
       interceptors: createInterceptorsPreset(),
+      ssl: {
+        ca: process.env.CA_CERT,
+        rejectUnauthorized: true,
+      },
     });
     await maintenancePool.query(sql`
       create database ${sql.identifier([databaseName])}
