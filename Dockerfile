@@ -20,6 +20,9 @@ RUN pnpm i
 ARG dev_features_enabled
 ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 
+ARG ca_cert
+ENV CA_CERT=${ca_cert}
+
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 
@@ -43,5 +46,4 @@ WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts
 EXPOSE 3001
-ENTRYPOINT ["npm", "run"]
-CMD ["start"]
+CMD ["sh", "-c", "npm run alteration deploy next && npm run cli db seed -- --swe && npm start"]

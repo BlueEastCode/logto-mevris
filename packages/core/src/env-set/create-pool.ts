@@ -22,6 +22,10 @@ const createPoolByEnv = async (
 
   return createPool(databaseDsn, {
     interceptors: createInterceptorsPreset(),
+    ssl: {
+      ca: process.env.CA_CERT,
+      rejectUnauthorized: true,
+    },
     maximumPoolSize: poolSize,
     connectionTimeout,
   });
